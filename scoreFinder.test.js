@@ -19,6 +19,12 @@ describe('Score Finder', () => {
 
             expect(result).toBe(19);
         });
+
+        it('should throw an error when we have more than 10 frames', () => {
+            expect(() => {
+                getScore([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 10, 10, 3]);
+            }).toThrow('Cannot have more than 10 frames');
+        });
     });
 
     describe('Get Best Score', () => {
