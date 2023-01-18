@@ -1,5 +1,8 @@
+const MAX_FRAME_COUNT = 10;
+const TOTAL_PINS = 10;
+
 const getScore = (rolls) => {
-    let rollCount = rolls.length;
+    const rollCount = rolls.length;
 
     let totalScore = 0;
 
@@ -14,14 +17,14 @@ const getScore = (rolls) => {
 
         let totalPinsKnocked = (firstThrowPinsKnocked + secondThrowPinsKnocked);
 
-        if (frameCount == 10) {
-            if (firstThrowPinsKnocked == 10) {
+        if (frameCount == MAX_FRAME_COUNT) {
+            if (firstThrowPinsKnocked == TOTAL_PINS) {
                 let thirdThrowPinsKnocked = rolls[i + 2];
 
-                totalScore += (10 + secondThrowPinsKnocked + thirdThrowPinsKnocked);
+                totalScore += (TOTAL_PINS + secondThrowPinsKnocked + thirdThrowPinsKnocked);
 
                 i += 3;
-            } else if (totalPinsKnocked == 10) {
+            } else if (totalPinsKnocked == TOTAL_PINS) {
                 let thirdThrowPinsKnocked = rolls[i + 2];
 
                 totalScore += (totalPinsKnocked + thirdThrowPinsKnocked);
@@ -50,18 +53,18 @@ const getScore = (rolls) => {
             wasPreviousThrowASpare = false;
         }
 
-        if (totalPinsKnocked < 10) {
+        if (totalPinsKnocked < TOTAL_PINS) {
             totalScore += totalPinsKnocked;
 
             i += 2;
-        } else if (firstThrowPinsKnocked == 10) {
-            totalScore += 10;
+        } else if (firstThrowPinsKnocked == TOTAL_PINS) {
+            totalScore += TOTAL_PINS;
 
             wasPreviousThrowAStrike = true;
 
             i++;
         } else {
-            totalScore += 10;
+            totalScore += TOTAL_PINS;
 
             wasPreviousThrowASpare = true;
 
@@ -72,23 +75,22 @@ const getScore = (rolls) => {
     return totalScore;
 };
 
-const getBestScore = (games) => {
-    let bestGameScore = 0;
-
-    games.forEach(roll => {
-        const currGameScore = getScore(roll);
-
-        if (currGameScore > bestGameScore) {
-            bestGameScore = currGameScore;
-        }
-    });
-
-    return bestGameScore;
-};
+const getBestScore = (games) => games.reduce(
+    (bestGameScore, game) => {
+        return Math.max(bestGameScore, getScore(game));
+    }, 0);
 
 console.log(getScore([3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6]));
 console.log(getScore([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 10, 10]));
 console.log(getScore([6, 4, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]));
+
+const game1 = [3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6, 3, 6,];
+const game2 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 10, 10];
+const game3 = [6, 4, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+const result = getBestScore([game1, game2, game3]);
+
+console.log(result);
 
 module.exports = {
     getScore,
